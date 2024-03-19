@@ -1,0 +1,160 @@
+{
+  "id": "region1",
+  "description": "Nella regione chiamata Call si trovano diverse caverne, una più insidiosa dell'altra",
+  "start": {
+    "areaId": "caverna1",
+    "roomId": "room1"
+  },
+  "exit": {
+    "areaId": "porto",
+    "roomId": "room1",
+    "xp": 1000
+  },
+  "items": {
+    "torcia1": {
+      "id": "torcia1",
+      "description": "una torcia consumata, ma ancora in buono stato",
+      "active": {
+        "value": true,
+        "isDynamic": false,
+        "readKeys": []
+      },
+      "interactions": [
+        {
+          "id": "torciaInterazioni",
+          "active": {
+            "value": true,
+            "isDynamic": false,
+            "readKeys": []
+          },
+          "actions": {
+            "use": {
+              "verb": "use",
+
+              "success": {
+                "description": "Accendi la torcia",
+                "setKeys": [
+                  {
+                    "regionId": "region1",
+                    "areaId": "caverna1",
+                    "key": "torciaAccesa",
+                    "value": "true"
+                  }
+                ]
+              }
+            },
+            "turn off": {
+              "verb": "turn off",
+              "success": {
+                "description": "Spegni la torcia",
+                "setKeys": [
+                  {
+                    "regionId": "region1",
+                    "areaId": "caverna1",
+                    "key": "torciaAccesa",
+                    "value": "false"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  "areas": {
+    "caverna1": {
+      "id": "caverna1",
+      "description": "Questa caverna non sembra essere molto grande vista dall'esterno.",
+      "env": {
+        "room3NordIsOpen": false,
+        "torciaAccesa": false
+      },
+      "rooms": {
+        "room1": {
+          "id": "room1",
+          "description": "L'ingresso della caverna ha poca luce, ma è ancora possibile vedere.",
+          "interactions": [
+            {
+              "id": "torcia",
+              "description": "una torcia spenta è per terra",
+              "active": {
+                "value": true,
+                "isDynamic": false,
+                "readKeys": []
+              },
+              "actions": {
+                "pick": {
+                  "verb": "pick",
+                  "success": {
+                    "description": "hai preso la torcia",
+                    "addItems": ["torcia1"]
+                  }
+                }
+              }
+            }
+          ],
+          "exits": {
+            "nord": {
+              "id": "nord",
+              "description": "",
+              "active": {
+                "value": true,
+                "isDynamic": false,
+                "readKeys": []
+              },
+              "success": { "description": "you cross the door." },
+              "goTo": {
+                "areaId": "caverna1",
+                "roomId": "room2"
+              }
+            }
+          }
+        },
+        "room2": {
+          "id": "room2",
+          "description": "La stanza è immersa nell'oscurità.",
+          "active": {
+            "value": true,
+            "isDynamic": false,
+            "readKeys": []
+          },
+          "interactions": [
+            {
+              "id": "illuminata",
+              "description": "Grazie alla luce della torcia riesci a vederti intorno, ci sono solo pochi sassi, nulla di valore.",
+              "active": {
+                "value": false,
+                "isDynamic": true,
+                "readKeys": [
+                  {
+                    "regionId": "region1",
+                    "areaId": "caverna1",
+                    "key": "torciaAccesa"
+                  }
+                ]
+              },
+              "actions": {}
+            }
+          ],
+          "exits": {
+            "nord": {
+              "id": "nord",
+              "description": "Al fondo della caverna, direzione nord, vedi un cunicolo che prosegue oltre nella montagna.",
+              "active": {
+                "value": false,
+                "isDynamic": true,
+                "readKeys": ["torciaAccesa"]
+              },
+              "success": { "description": "passi la porta" },
+              "goTo": {
+                "areaId": "caverna1",
+                "roomId": "room3"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
